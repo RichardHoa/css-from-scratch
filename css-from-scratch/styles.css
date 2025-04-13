@@ -151,7 +151,6 @@
     --border-radius-1: 0.75rem;
     --border-radius-2: 1rem;
     --border-radius-3: 1.5rem;
-
   }
 }
 
@@ -191,9 +190,14 @@
 }
 
 @layer layout {
-
   .margin-top {
     margin-top: 0.5rem;
+  }
+
+  .grid-auto-fit {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   }
   .equal-columns {
     display: grid;
@@ -249,14 +253,15 @@
     font-size: var(--font-size-md);
     text-decoration: none;
     cursor: pointer;
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     background-color: var(--background-accent-main);
     font-family: var(--font-style-heading);
     font-weight: var(--font-weight-bold);
     border-radius: var(--border-radius-2);
   }
 
-  .button:hover,.button:focus-visible {
+  .button:hover,
+  .button:focus-visible {
     color: var(--text-high-contrast);
   }
 
@@ -264,7 +269,7 @@
     background-image: url(/assets/hero.webp);
     background-position: center;
     background-size: cover;
-    color: var(--text-high-contrast)
+    color: var(--text-high-contrast);
   }
   .site-header {
     padding-block: 1rem;
@@ -275,11 +280,60 @@
     flex-wrap: wrap;
     gap: 0.5rem 1rem;
   }
+
+  [aria-controls="primary-nav"] {
+    z-index: 999;
+    background: transparent;
+    cursor: pointer;
+    border: 0;
+    img {
+      border-radius: unset;
+    }
+    display: none;
+
+    @media (width < 760px) {
+      display: block;
+    }
+  }
   .primary-navigation {
     ul {
       display: flex;
       gap: 0.5rem 1rem;
       flex-wrap: wrap;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    @media (width < 760px) {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      font-family: var(--font-style-heading);
+      background-color: var(--background-accent-main);
+      border-radius: 0 0 0 var(--border-radius-3);
+      padding: 2rem;
+
+      ul {
+        gap: 0;
+        flex-direction: column;
+
+        li + li {
+          border-top: 2px solid var(--background-accent-light);
+          margin-top: 1rem;
+          padding-top: 1rem;
+        }
+      }
+    }
+  }
+
+  @media (width < 760px) {
+    [aria-expanded="true"] ~ .primary-navigation {
+      display: block;
     }
   }
   .site-footer {
@@ -289,7 +343,7 @@
     display: grid;
     gap: 2rem;
   }
-  
+
   .site-footer__heading {
     font-size: var(--font-size-lg);
     color: var(--text-high-contrast);
@@ -302,13 +356,99 @@
     border-radius: var(--border-radius-3);
     img {
       border-radius: var(--border-radius-2);
+      margin-bottom: 1rem;
     }
   }
+  .mushroom-guide {
+    --card-title-font-size: var(--font-size-lg);
+    --card-title-color: var(--text-high-contrast);
+  }
   .card__title {
-    font-size: var(--card-title-font-size,var(--font-size-lg));
-    color: var(--card-title-color,var(--text-brand));
-    margin-top: 1rem;
+    font-size: var(--card-title-font-size, var(--font-size-lg));
+    color: var(--card-title-color, var(--text-brand));
     font-weight: var(--font-weight-bold);
+  }
+
+  .card__note {
+    margin-top: auto;
+    background-color: var(--background-extra-light);
+    padding: 0.75rem;
+    border-radius: var(--border-radius-2);
+  }
+
+  select {
+    font-family: var(--font-style-heading);
+    background-color: var(--background-accent-main);
+    color: var(--text-high-contrast);
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    border: 0;
+    border-radius: var(--border-radius-2);
+    margin-block: 1rem;
+  }
+
+  .tag-list {
+    display: flex;
+    gap: var(--tag-list-gap, 12px);
+    margin-top: 1rem;
+
+    > li {
+      padding: 0 0.5rem;
+      color: var(--text-high-contrast);
+      font-family: var(--font-style-heading);
+      font-size: var(--font-size-sm);
+      background-color: var(--tag-background);
+      border-radius: var(--border-radius-1);
+
+      &[data-edible="edible"] {
+        --tag-background: var(--background-accent-main);
+      }
+      &[data-edible="toxic"] {
+        --tag-background: var(--color-red-500);
+      }
+
+      &[data-season="summer"] {
+        --tag-background: var(--background-accent-main);
+      }
+      &[data-season="fall"] {
+        --tag-background: var(--color-orange-500);
+      }
+      &[data-season="spring"] {
+        --tag-background: var(--color-teal-500);
+      }
+    }
+  }
+
+  .faq-bento-grid {
+    --card-title-color: var(--text-high-contrast);
+    display: grid;
+    gap: 1rem;
+    grid-template-areas: "card-one" "card-two" "card-three" "card-four";
+
+    @media (width > 600px) {
+      grid-template-areas:
+        "card-one   card-two"
+        "card-three card-four";
+    }
+
+    @media (width > 900px) {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-areas:
+        "card-one   card-two   card-four"
+        "card-three card-three card-four";
+    }
+
+    :nth-child(1) {
+      grid-area: card-one;
+    }
+    :nth-child(2) {
+      grid-area: card-two;
+    }
+    :nth-child(3) {
+      grid-area: card-three;
+    }
+    :nth-child(4) {
+      grid-area: card-four;
+    }
   }
 }
 
